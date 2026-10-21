@@ -1,0 +1,1189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA | Task Manager Dashboard</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --blue: #4169e1;
+  --blue-dark: #2f50c7;
+  --ink: #182230;
+  --muted: #748094;
+  --line: #e7ebf2;
+  --bg: #f5f7fb;
+  --green: #188653;
+  --red: #c33b48;
+  --amber: #ad7411;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* HEADER */
+
+.topbar {
+  min-height: 76px;
+  background: white;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(18px, 6vw, 86px);
+  gap: 20px;
+}
+
+.brand {
+  font: 800 24px Manrope, sans-serif;
+  letter-spacing: -1px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.brand span {
+  color: var(--blue);
+}
+
+.top-right {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* MAIN */
+
+.layout {
+  width: min(1180px, 92%);
+  margin: 38px auto 64px;
+}
+
+.welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 22px;
+  margin-bottom: 26px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 1.8px;
+  color: var(--blue);
+  font-weight: 800;
+  margin: 0 0 10px;
+}
+
+.welcome h1 {
+  font: 800 clamp(27px, 4vw, 38px)/1.15 Manrope, sans-serif;
+  letter-spacing: -1.5px;
+  margin: 0 0 8px;
+}
+
+.welcome p.sub {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* BUTTONS */
+
+.btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 17px;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  transition: .18s;
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--blue-dark);
+  transform: translateY(-1px);
+}
+
+.btn-soft {
+  background: #edf1ff;
+  color: var(--blue);
+}
+
+.btn-soft:hover {
+  background: #e0e7ff;
+}
+
+/* DASHBOARD STATS */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.stat {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 19px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stat-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #edf1ff;
+  color: var(--blue);
+  font-size: 20px;
+}
+
+.stat:nth-child(2) .stat-icon {
+  background: #e8f7ef;
+  color: var(--green);
+}
+
+.stat:nth-child(3) .stat-icon {
+  background: #fff5e2;
+  color: var(--amber);
+}
+
+.stat:nth-child(4) .stat-icon {
+  background: #f0ebff;
+  color: #7954c6;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font: 800 25px Manrope, sans-serif;
+}
+
+/* TASK PANEL */
+
+.panel {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  padding: 23px;
+  margin-bottom: 20px;
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 19px;
+}
+
+.panel-head h2 {
+  font: 800 18px Manrope, sans-serif;
+  margin: 0;
+}
+
+.panel-head p {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 5px 0 0;
+}
+
+/* SEARCH AND FILTERS */
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(190px, 1fr) 190px 190px;
+  gap: 11px;
+  margin-bottom: 18px;
+}
+
+.search-wrap {
+  position: relative;
+}
+
+.search-wrap span {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8c97a8;
+}
+
+input, select, textarea {
+  width: 100%;
+  border: 1px solid #dfe5ee;
+  border-radius: 9px;
+  background: white;
+  color: var(--ink);
+  padding: 11px 12px;
+  outline: none;
+  font-size: 13px;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px #4169e118;
+}
+
+.search-wrap input {
+  padding-left: 37px;
+}
+
+/* TASK ITEMS */
+
+.task-list {
+  display: grid;
+  gap: 11px;
+}
+
+.task {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 13px;
+  align-items: start;
+  transition: .15s;
+}
+
+.task:hover {
+  border-color: #ccd5e8;
+}
+
+.task-check {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--blue);
+  margin-top: 3px;
+  cursor: pointer;
+}
+
+.task-main {
+  min-width: 0;
+}
+
+.task-title {
+  font-weight: 700;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.task.completed .task-title {
+  text-decoration: line-through;
+  color: #929aaa;
+}
+
+.task-desc {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 6px 0 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.pill {
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 30px;
+  padding: 5px 9px;
+  background: #f0f3f8;
+  color: #677387;
+}
+
+.pill.priority-high {
+  background: #fff0f1;
+  color: var(--red);
+}
+
+.pill.priority-medium {
+  background: #fff5e4;
+  color: var(--amber);
+}
+
+.pill.priority-low {
+  background: #e9f7ef;
+  color: var(--green);
+}
+
+.due {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.due.overdue {
+  color: var(--red);
+  font-weight: 700;
+}
+
+.task-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.icon-btn {
+  border: 1px solid var(--line);
+  background: white;
+  color: #647187;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.icon-btn:hover {
+  background: #f1f4fa;
+  color: var(--blue);
+}
+
+.icon-btn.delete:hover {
+  color: var(--red);
+  background: #fff0f1;
+}
+
+/* EMPTY STATE */
+
+.empty {
+  padding: 46px 15px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.empty strong {
+  display: block;
+  color: var(--ink);
+  font: 800 18px Manrope;
+  margin-bottom: 8px;
+}
+
+.empty p {
+  font-size: 13px;
+  margin: 0;
+}
+
+/* MODAL */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #10182875;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 10;
+}
+
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal {
+  width: min(520px, 100%);
+  background: white;
+  border-radius: 18px;
+  padding: 25px;
+  box-shadow: 0 25px 90px #11182730;
+  max-height: 92vh;
+  overflow: auto;
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 19px;
+}
+
+.modal-head h2 {
+  font: 800 21px Manrope;
+  margin: 0;
+}
+
+.close {
+  border: 0;
+  background: #f0f2f6;
+  border-radius: 9px;
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  color: #586477;
+}
+
+.field {
+  margin-bottom: 15px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 21px;
+}
+
+.note {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 18px;
+}
+
+/* FOOTER */
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 23px clamp(18px, 6vw, 86px);
+  border-top: 1px solid var(--line);
+  background: white;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:800px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .search-wrap {
+    grid-column: 1 / -1;
+  }
+
+  .layout {
+    margin-top: 26px;
+  }
+
+  .panel {
+    padding: 17px;
+  }
+
+  .task {
+    grid-template-columns: auto 1fr;
+  }
+
+  .task-actions {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .welcome {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .welcome > .btn {
+    width: 100%;
+  }
+}
+
+@media(max-width:480px) {
+  .stats {
+    gap: 9px;
+  }
+
+  .stat {
+    padding: 13px;
+    gap: 10px;
+  }
+
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .search-wrap {
+    grid-column: auto;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .task {
+    padding: 13px;
+  }
+
+  footer {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#">NOVA<span>.</span></a>
+  <div class="top-right">
+    Task Manager Dashboard <strong>·</strong> Task 4
+  </div>
+</header>
+
+<main class="layout">
+
+  <section class="welcome">
+    <div>
+      <p class="eyebrow">YOUR WORKSPACE</p>
+      <h1>Task Manager</h1>
+      <p class="sub">Plan your work, track progress, and get things done.</p>
+    </div>
+
+    <button class="btn btn-primary" id="add-task-btn" type="button">
+      ＋ Add new task
+    </button>
+  </section>
+
+  <!-- DASHBOARD STATS -->
+  <section class="stats" aria-label="Task statistics">
+
+    <article class="stat">
+      <div class="stat-icon">▤</div>
+      <div>
+        <div class="stat-label">Total tasks</div>
+        <div class="stat-value" id="stat-total">0</div>
+      </div>
+    </article>
+
+    <article class="stat">
+      <div class="stat-icon">✓</div>
+      <div>
+        <div class="stat-label">Completed</div>
+        <div class="stat-value" id="stat-completed">0</div>
+      </div>
+    </article>
+
+    <article class="stat">
+      <div class="stat-icon">◷</div>
+      <div>
+        <div class="stat-label">Pending</div>
+        <div class="stat-value" id="stat-pending">0</div>
+      </div>
+    </article>
+
+    <article class="stat">
+      <div class="stat-icon">↗</div>
+      <div>
+        <div class="stat-label">Completion</div>
+        <div class="stat-value" id="stat-rate">0%</div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- TASK PANEL -->
+  <section class="panel">
+
+    <div class="panel-head">
+      <div>
+        <h2>Your tasks</h2>
+        <p>Manage and organize your daily tasks.</p>
+      </div>
+
+      <button id="clear-completed" class="btn btn-soft" type="button">
+        Clear completed
+      </button>
+    </div>
+
+    <!-- SEARCH + FILTERS -->
+    <div class="toolbar">
+
+      <div class="search-wrap">
+        <span>⌕</span>
+        <input
+          type="search"
+          id="search"
+          placeholder="Search tasks by name..."
+          aria-label="Search tasks"
+        >
+      </div>
+
+      <select id="status-filter" aria-label="Filter by status">
+        <option value="all">All statuses</option>
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+      </select>
+
+      <select id="sort-filter" aria-label="Sort tasks">
+        <option value="newest">Recently added</option>
+        <option value="due">Due date</option>
+        <option value="priority">Priority</option>
+        <option value="alphabetical">Task name</option>
+      </select>
+
+    </div>
+
+    <div id="task-list" class="task-list"></div>
+
+    <p class="note">
+      Your tasks are saved in LocalStorage in this browser.
+      This demo does not sync across devices.
+    </p>
+
+  </section>
+</main>
+
+<footer>
+  <span>© <span id="year"></span> NOVA Task Manager</span>
+  <span>Stay focused. Make progress.</span>
+</footer>
+
+<!-- ADD / EDIT TASK MODAL -->
+<div
+  class="modal-backdrop"
+  id="task-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+>
+  <section class="modal">
+
+    <div class="modal-head">
+      <h2 id="modal-title">Add a task</h2>
+      <button
+        class="close"
+        id="close-modal"
+        type="button"
+        aria-label="Close dialog"
+      >×</button>
+    </div>
+
+    <form id="task-form">
+
+      <div class="field">
+        <label for="task-title">Task name *</label>
+        <input
+          id="task-title"
+          name="title"
+          required
+          minlength="2"
+          maxlength="120"
+          placeholder="e.g. Finish assignment"
+        >
+      </div>
+
+      <div class="field">
+        <label for="task-description">Description (optional)</label>
+        <textarea
+          id="task-description"
+          name="description"
+          maxlength="1000"
+          placeholder="Add a few details..."
+        ></textarea>
+      </div>
+
+      <div class="field-row">
+
+        <div class="field">
+          <label for="task-priority">Priority</label>
+          <select id="task-priority" name="priority">
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="task-due">Due date (optional)</label>
+          <input id="task-due" name="dueDate" type="date">
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-soft" id="cancel-modal" type="button">
+          Cancel
+        </button>
+
+        <button class="btn btn-primary" id="save-task" type="submit">
+          Save task
+        </button>
+      </div>
+
+    </form>
+  </section>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const STORAGE_KEY = "novaTaskManagerTasks";
+
+  const taskList = document.getElementById("task-list");
+  const modal = document.getElementById("task-modal");
+  const form = document.getElementById("task-form");
+  const titleInput = document.getElementById("task-title");
+
+  let editingId = null;
+
+  // READ TASKS FROM LOCAL STORAGE
+  function readTasks() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      return Array.isArray(saved) ? saved : [];
+    } catch {
+      return [];
+    }
+  }
+
+  let tasks = readTasks();
+
+  // SAVE TASKS
+  function saveTasks() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+      return true;
+    } catch {
+      alert("Unable to save tasks. Browser storage may be unavailable or full.");
+      return false;
+    }
+  }
+
+  // FORMAT DUE DATE
+  function escapeDate(value) {
+    if (!value) return "";
+
+    const date = new Date(value + "T00:00:00");
+
+    return Number.isNaN(date.getTime())
+      ? value
+      : date.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric"
+        });
+  }
+
+  // CREATE ELEMENT SAFELY
+  function createEl(tag, className, content) {
+    const node = document.createElement(tag);
+
+    if (className) node.className = className;
+
+    if (content !== undefined) {
+      node.textContent = content;
+    }
+
+    return node;
+  }
+
+  // UPDATE DASHBOARD STATS
+  function refreshStats() {
+    const completed = tasks.filter(t => t.completed).length;
+    const total = tasks.length;
+
+    document.getElementById("stat-total").textContent = total;
+    document.getElementById("stat-completed").textContent = completed;
+    document.getElementById("stat-pending").textContent = total - completed;
+
+    document.getElementById("stat-rate").textContent =
+      total ? Math.round(completed / total * 100) + "%" : "0%";
+  }
+
+  // SEARCH, FILTER AND SORT
+  function filteredTasks() {
+    const query = document.getElementById("search")
+      .value.trim().toLowerCase();
+
+    const status = document.getElementById("status-filter").value;
+    const sort = document.getElementById("sort-filter").value;
+
+    const visible = tasks.filter(task => {
+      const matches = (
+        task.title + " " + (task.description || "")
+      ).toLowerCase().includes(query);
+
+      const statusMatches =
+        status === "all" ||
+        (status === "completed" ? task.completed : !task.completed);
+
+      return matches && statusMatches;
+    });
+
+    const priorityRank = {
+      high: 0,
+      medium: 1,
+      low: 2
+    };
+
+    visible.sort((a, b) => {
+      if (sort === "due") {
+        return (a.dueDate || "9999-12-31")
+          .localeCompare(b.dueDate || "9999-12-31");
+      }
+
+      if (sort === "priority") {
+        return (priorityRank[a.priority] ?? 1) -
+               (priorityRank[b.priority] ?? 1);
+      }
+
+      if (sort === "alphabetical") {
+        return a.title.localeCompare(b.title);
+      }
+
+      return (b.createdAt || 0) - (a.createdAt || 0);
+    });
+
+    return visible;
+  }
+
+  // RENDER TASKS
+  function render() {
+    refreshStats();
+    taskList.replaceChildren();
+
+    const visible = filteredTasks();
+
+    if (!visible.length) {
+      const empty = createEl("div", "empty");
+
+      const heading = createEl(
+        "strong",
+        "",
+        tasks.length ? "No matching tasks" : "Your task list is empty"
+      );
+
+      const para = createEl(
+        "p",
+        "",
+        tasks.length
+          ? "Try changing your search or filters."
+          : "Add your first task to get your day organized."
+      );
+
+      empty.append(heading, para);
+      taskList.append(empty);
+      return;
+    }
+
+    visible.forEach(task => {
+      const article = createEl(
+        "article",
+        "task" + (task.completed ? " completed" : "")
+      );
+
+      // COMPLETE CHECKBOX
+      const checkbox = createEl("input", "task-check");
+
+      checkbox.type = "checkbox";
+      checkbox.checked = !!task.completed;
+
+      checkbox.setAttribute(
+        "aria-label",
+        "Mark " + task.title + " completed"
+      );
+
+      checkbox.addEventListener("change", () => {
+        const found = tasks.find(t => t.id === task.id);
+
+        if (!found) return;
+
+        found.completed = checkbox.checked;
+
+        saveTasks();
+        render();
+      });
+
+      // TASK CONTENT
+      const main = createEl("div", "task-main");
+
+      main.append(
+        createEl("div", "task-title", task.title)
+      );
+
+      if (task.description) {
+        main.append(
+          createEl("p", "task-desc", task.description)
+        );
+      }
+
+      const meta = createEl("div", "task-meta");
+
+      const priority = createEl(
+        "span",
+        "pill priority-" + (task.priority || "medium"),
+        (task.priority || "medium").toUpperCase() + " PRIORITY"
+      );
+
+      const state = createEl(
+        "span",
+        "pill",
+        task.completed ? "COMPLETED" : "PENDING"
+      );
+
+      meta.append(priority, state);
+
+      // DUE DATE
+      if (task.dueDate) {
+        const due = createEl(
+          "span",
+          "due",
+          "Due " + escapeDate(task.dueDate)
+        );
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const dueDate = new Date(task.dueDate + "T00:00:00");
+
+        if (!task.completed && dueDate < today) {
+          due.classList.add("overdue");
+        }
+
+        meta.append(due);
+      }
+
+      main.append(meta);
+
+      // ACTION BUTTONS
+      const actions = createEl("div", "task-actions");
+
+      const edit = createEl("button", "icon-btn", "✎");
+
+      edit.type = "button";
+      edit.title = "Edit task";
+      edit.setAttribute("aria-label", "Edit " + task.title);
+
+      edit.addEventListener("click", () => openModal(task));
+
+      const remove = createEl("button", "icon-btn delete", "⌫");
+
+      remove.type = "button";
+      remove.title = "Delete task";
+      remove.setAttribute("aria-label", "Delete " + task.title);
+
+      remove.addEventListener("click", () => {
+        if (!confirm('Delete "' + task.title + '"?')) return;
+
+        tasks = tasks.filter(t => t.id !== task.id);
+
+        saveTasks();
+        render();
+      });
+
+      actions.append(edit, remove);
+      article.append(checkbox, main, actions);
+      taskList.append(article);
+    });
+  }
+
+  // OPEN ADD / EDIT MODAL
+  function openModal(task = null) {
+    editingId = task ? task.id : null;
+
+    form.reset();
+
+    document.getElementById("modal-title").textContent =
+      task ? "Edit task" : "Add a task";
+
+    document.getElementById("save-task").textContent =
+      task ? "Update task" : "Save task";
+
+    if (task) {
+      form.elements.title.value = task.title;
+      form.elements.description.value = task.description || "";
+      form.elements.priority.value = task.priority || "medium";
+      form.elements.dueDate.value = task.dueDate || "";
+    }
+
+    modal.classList.add("open");
+
+    setTimeout(() => titleInput.focus(), 0);
+  }
+
+  // CLOSE MODAL
+  function closeModal() {
+    modal.classList.remove("open");
+    editingId = null;
+    form.reset();
+  }
+
+  document.getElementById("add-task-btn")
+    .addEventListener("click", () => openModal());
+
+  document.getElementById("close-modal")
+    .addEventListener("click", closeModal);
+
+  document.getElementById("cancel-modal")
+    .addEventListener("click", closeModal);
+
+  modal.addEventListener("click", event => {
+    if (event.target === modal) closeModal();
+  });
+
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeModal();
+  });
+
+  // ADD OR UPDATE TASK
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const title = form.elements.title.value.trim();
+    const description = form.elements.description.value.trim();
+    const priority = form.elements.priority.value;
+    const dueDate = form.elements.dueDate.value;
+
+    if (title.length < 2) {
+      titleInput.setCustomValidity(
+        "Please enter at least 2 characters."
+      );
+
+      titleInput.reportValidity();
+      titleInput.setCustomValidity("");
+      return;
+    }
+
+    if (editingId) {
+      const task = tasks.find(t => t.id === editingId);
+
+      if (task) {
+        Object.assign(task, {
+          title,
+          description,
+          priority,
+          dueDate
+        });
+      }
+    } else {
+      tasks.unshift({
+        id: (
+          crypto.randomUUID
+            ? crypto.randomUUID()
+            : String(Date.now()) + Math.random()
+        ),
+        title,
+        description,
+        priority,
+        dueDate,
+        completed: false,
+        createdAt: Date.now()
+      });
+    }
+
+    if (saveTasks()) {
+      closeModal();
+      render();
+    }
+  });
+
+  // SEARCH + FILTER + SORT EVENTS
+  ["search", "status-filter", "sort-filter"].forEach(id => {
+    document.getElementById(id).addEventListener(
+      id === "search" ? "input" : "change",
+      render
+    );
+  });
+
+  // REMOVE ALL COMPLETED TASKS
+  document.getElementById("clear-completed")
+    .addEventListener("click", () => {
+
+      const doneCount = tasks.filter(t => t.completed).length;
+
+      if (!doneCount) {
+        alert("There are no completed tasks to clear.");
+        return;
+      }
+
+      if (confirm("Remove all " + doneCount + " completed task(s)?")) {
+        tasks = tasks.filter(t => !t.completed);
+
+        saveTasks();
+        render();
+      }
+    });
+
+  // CURRENT YEAR
+  document.getElementById("year").textContent =
+    new Date().getFullYear();
+
+  // INITIAL RENDER
+  render();
+
+})();
+</script>
+
+</body>
+</html>
